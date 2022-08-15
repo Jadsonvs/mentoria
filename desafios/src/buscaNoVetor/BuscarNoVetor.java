@@ -15,7 +15,7 @@ public class BuscarNoVetor {
 		
 		for(int i = 0; i < vetorInteiro.length; i++) {
 			if(procurarPor == vetorInteiro[i]) {
-				return posicaoDovalor = i;
+				return i;
 			}
 		}
 		return posicaoDovalor;
