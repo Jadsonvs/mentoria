@@ -79,5 +79,15 @@ public class UserService {
 		}
 		return newList;
 	}
+	
+	public List<User> getUserByNameAndAge(String name, Integer age){
+		List<User> newList = new ArrayList<>();
+		for(User user : userRepository.getUsers()) {
+			if(user.getName().equals(name) && user.getAge().equals(age)) {
+				newList.add(user);
+			}
+		}
+		return newList;
+	}
 
 }

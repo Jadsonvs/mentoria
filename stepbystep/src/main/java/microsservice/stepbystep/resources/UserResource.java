@@ -1,5 +1,6 @@
 package microsservice.stepbystep.resources;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -31,18 +32,20 @@ public class UserResource {
 		return ResponseEntity.ok(list);
 	}
 	
-	@GetMapping(value = "/users/user-by-name", produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<List<User>> findUserbyName(@RequestParam String name){
-		List<User> list = userService.getUserByName(name);
+	@GetMapping(value = "/users/", produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<List<User>> findUserByFilter(@RequestParam(required = false) String name, @RequestParam(required = false) Integer age){
+		List<User> list = new ArrayList<>();
+		if(name != null) {
+			list = userService.getUserByName(name);
+		}
+		if (age != null) {
+			list = userService.getUserByAge(age);
+		}
+		if (name != null && age != null) {
+			list = userService.getUserByNameAndAge(name, age);
+		}
 		return ResponseEntity.ok(list);
 	}
-	
-	@GetMapping(value = "/users/user-by-age", produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<List<User>> findUserByAge(@RequestParam Integer age){
-		List<User> list = userService.getUserByAge(age);
-		return ResponseEntity.ok(list);
-	}
-	
 	
 	@GetMapping(value = "/users/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<User> findUserbyId(@PathVariable UUID id){

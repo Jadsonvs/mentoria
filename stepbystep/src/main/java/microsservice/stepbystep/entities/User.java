@@ -11,6 +11,10 @@ public class User {
 	
 	private Integer age;
 	
+	public User () {
+		this.id = UUID.randomUUID();
+	}
+	
 	public UUID getId() {
 		return id;
 	}
