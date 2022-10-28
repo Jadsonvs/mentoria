@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -25,10 +27,13 @@ public class UserResource {
 	
 	@Autowired
 	public UserService userService;
+	
+	Logger logger = LoggerFactory.getLogger(UserResource.class);
 
 	@GetMapping(value = "/users", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<List<User>> getAllUsers() {
 		List<User> list = userService.userRepository.getUsers();
+		logger.info("User list requested: " + list.toString());
 		return ResponseEntity.ok(list);
 	}
 	
@@ -56,6 +61,7 @@ public class UserResource {
 	@PostMapping(value = "/users", consumes = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<User> saveUser(@RequestBody User user) {
 		userService.userRepository.add(user);
+		logger.info("User \"" + user + "\" sucessfully added.");
 		return ResponseEntity.accepted().build();
 	}
 	
@@ -68,7 +74,6 @@ public class UserResource {
 	@PatchMapping(value = "/users", consumes = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<User> updateOnlyOneAttribute(@RequestBody User updateUser){
 		userService.updateOnlyOneAttribute(updateUser);
-		System.out.println("CHamou o método!");
 		return ResponseEntity.accepted().build();
 	}
 	

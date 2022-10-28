@@ -55,7 +55,12 @@ public class User {
 		User other = (User) obj;
 		return Objects.equals(age, other.age) && Objects.equals(id, other.id) && Objects.equals(name, other.name);
 	}
-	
+
+	@Override
+	public String toString() {
+		return "User [name=" + name + ", age=" + age + "]";
+	}
+
 	
 	
 	
