@@ -3,6 +3,7 @@ package microsservice.stepbystep.entities;
 import java.util.Objects;
 import java.util.UUID;
 
+
 public class User {
 	
 	private UUID id;
@@ -10,10 +11,6 @@ public class User {
 	private String name;
 	
 	private Integer age;
-	
-	public User () {
-		this.id = UUID.randomUUID();
-	}
 	
 	public UUID getId() {
 		return id;
