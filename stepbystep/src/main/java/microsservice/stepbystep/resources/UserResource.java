@@ -1,7 +1,6 @@
 package microsservice.stepbystep.resources;
 
 import java.util.ArrayList;
-import java.util.InputMismatchException;
 import java.util.List;
 import java.util.UUID;
 
@@ -23,6 +22,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import microsservice.stepbystep.entities.User;
 import microsservice.stepbystep.services.UserService;
+import microsservice.stepbystep.services.exceptions.UserNameAlreadyExistException;
+import microsservice.stepbystep.services.exceptions.UserNotFoundException;
 
 @RestController
 public class UserResource {
@@ -51,7 +52,7 @@ public class UserResource {
 			}
 			return ResponseEntity.ok(list);
 		}
-		catch(NullPointerException e) {
+		catch(UserNotFoundException e) {
 			return ResponseEntity.notFound().build();
 		}
 		
@@ -62,7 +63,7 @@ public class UserResource {
 		try {
 			User user = userService.getUserById(id);
 			return ResponseEntity.ok(user);
-		} catch (InputMismatchException e) {
+		} catch (UserNotFoundException e) {
 			return ResponseEntity.notFound().build();
 		}
 	}
@@ -72,8 +73,8 @@ public class UserResource {
 		try {
 			user.setId(UUID.randomUUID());
 			userService.addUser(user);
-		} catch (InputMismatchException e) {
-			return ResponseEntity.unprocessableEntity().body("ID already exist in the system.");
+		} catch (UserNameAlreadyExistException e) {
+			return ResponseEntity.unprocessableEntity().body("User's name already exist in the system.");
 		}
 		return ResponseEntity.status(HttpStatus.CREATED).build();
 	}
@@ -84,9 +85,12 @@ public class UserResource {
 			userService.updateUser(updateUser);
 			return ResponseEntity.accepted().build();
 		}
-		catch (InputMismatchException e) {
+		catch (UserNotFoundException e) {
 			return ResponseEntity.status(HttpStatus.CREATED).body("ID not found in the database."
 					+ " It was created a new user.");
+		}
+		catch(UserNameAlreadyExistException e) {
+			return ResponseEntity.unprocessableEntity().body("User's name already exist in the database.");
 		}
 	}
 
@@ -96,7 +100,7 @@ public class UserResource {
 			userService.updateOnlyOneAttribute(updateUser);
 			return ResponseEntity.accepted().build();
 		}
-		catch (Exception e) {
+		catch (UserNotFoundException e) {
 			return ResponseEntity.notFound().build();
 		}
 	}
@@ -105,7 +109,7 @@ public class UserResource {
 	public ResponseEntity<String> delete(@PathVariable UUID id) {
 		try {
 			userService.deleteUser(id);
-		} catch (NullPointerException e) {
+		} catch (UserNotFoundException e) {
 			return ResponseEntity.notFound().build();
 		}
 		return ResponseEntity.noContent().build();
